@@ -23,13 +23,18 @@ public class UrlShortenerService {
     private final Random random = new Random();
 
     private final Counter dummyCounter;
+    //New Counter 2.2.3
+    private final Counter customerCounter;
+
+
 
     public UrlShortenerService(MeterRegistry meterRegistry) {
         logger.info("UrlShortenerService initialized with in-memory storage");
-        this.dummyCounter = Counter.builder("dummyCounter")
-                .description("dummy description")
+        this.customerCounter = Counter.builder("customerCounter")
+                .description("counter description")
                 .register(meterRegistry);
     }
+    
 
     private void simulateLatency() {
         int delay = 50 + random.nextInt(450);
@@ -50,6 +55,7 @@ public class UrlShortenerService {
         if (customCode != null && !customCode.isEmpty()) {
             if (urlStorage.containsKey(customCode)) {
                 logger.warn("Custom code already exists: {}", customCode);
+                customerCounter.increment();
                 throw new IllegalArgumentException("Custom code already exists: " + customCode);
             }
             shortCode = customCode;

@@ -1,7 +1,7 @@
 # Bitácora Experimento - Observabilidad y Monitoreo
 
-**Nombre del estudiante:** _____________________________  
----
+**Nombre del estudiante:** Julian Camilo Lopez Barrero
+--- 
 Cuando acabes no olvides ayudarnos evaluando tu ⭐[experiencia](https://forms.office.com/r/JCyhCpujrt)⭐
 ---
 
@@ -22,22 +22,17 @@ Cuando acabes no olvides ayudarnos evaluando tu ⭐[experiencia](https://forms.o
 
 **¿La aplicación se desplegó correctamente?** 
 
-- [ ] Sí
+- [X] Sí
 - [ ] No
 
 **Captura de pantalla de la aplicación funcionando:**
 
 > _[Inserta aquí la imagen de la aplicación corriendo en /api/]_
+![alt text](image.png)
 
 ### 1.3. Observaciones y problemas encontrados (opcional)
 
-```
-
-
-
-```
-
----
+Creo que ninguno :)
 
 ## Etapa 2: Métricas Iniciales
 
@@ -45,10 +40,10 @@ Cuando acabes no olvides ayudarnos evaluando tu ⭐[experiencia](https://forms.o
 
 **Endpoints probados:**
 
-- [ ] `GET /api/`
-- [ ] `POST /api/shorten`
-- [ ] `GET /api/{shortCode}`
-- [ ] `GET /api/urls`
+- [X] `GET /api/`
+- [X] `POST /api/shorten`
+- [X] `GET /api/{shortCode}` No sirve
+- [X] `GET /api/urls`
 
 
 ### 2.0.2. Análisis de dos métricas relevantes
@@ -57,19 +52,19 @@ Cuando acabes no olvides ayudarnos evaluando tu ⭐[experiencia](https://forms.o
 
 **Nombre de la métrica:**  
 ```
-
+http_server_request_active_seconds_max
 ```
-
+![alt text](image-1.png)
+---
 **Tipo de métrica:** 
 - [ ] Counter
-- [ ] Gauge 
+- [X] Gauge 
 - [ ] Histogram 
 - [ ] Summary
 
 **Descripción de qué información aporta:**
 ```
-
-
+Tiene el maximo de segundos que tarda una peticion solicitada que este activa en el servidor 
 
 ```
 
@@ -82,8 +77,7 @@ Ejemplo: Un aumento en peticiones HTTP podría influir en el uso de CPU
 
 **¿En que escenarios puede ayudar esta métrica?**
 ```
-
-
+Podria ayduar en un  caso donde se tengan muchas solicitudes y se quiera probar si el sistema responde bien y si los tiempos o la latencia es buena en el servidor
 
 ```
 
@@ -91,30 +85,27 @@ Ejemplo: Un aumento en peticiones HTTP podría influir en el uso de CPU
 ```
 Ejemplo: uri, method, status, instance, job, etc.
 
-
-
 ```
-
+Tiene exception, method, outcome, status y uri
 ---
 
 #### Métrica 2
+![alt text](image-2.png)
 
 **Nombre de la métrica:**  
 ```
-
+jvm_memory_used_bytes The amount of used memory
 ```
 
 **Tipo de métrica:** 
 - [ ] Counter
-- [ ] Gauge 
+- [X] Gauge 
 - [ ] Histogram 
 - [ ] Summary
 
 **Descripción de qué información aporta:**
 ```
-
-
-
+La cantidad de memoria usada
 ```
 
 **Relación con otras métricas (si aplica):**
@@ -126,9 +117,7 @@ Ejemplo: Un aumento en peticiones HTTP podría influir en el uso de CPU
 
 **¿En que escenarios puede ayudar esta métrica?**
 ```
-
-
-
+Puede ayudar cuando se realizan multiples solicitudes y el como el sistema actua en base a la memoria
 ```
 
 **¿Qué etiquetas (labels) se utilizan para agrupar los datos?**
@@ -138,7 +127,7 @@ Ejemplo: uri, method, status, instance, job, etc.
 
 
 ```
-
+Usa area y id
 ---
 
 ## Etapa 2.1: Dashboard Base en Grafana
@@ -148,7 +137,10 @@ Ejemplo: uri, method, status, instance, job, etc.
 
 **Captura de pantalla del dashboard:**
 
-> _[Inserta aquí la imagen del dashboard con los 4 paneles]_
+![alt text](image-4.png)
+---
+![alt text](image-5.png)
+
 
 ### 2.1.2. Visualizaciónes Adicionales (Con las metricas actuales)
 
@@ -163,17 +155,17 @@ Ejemplo: uri, method, status, instance, job, etc.
 
 **Título del panel:**
 ```
-
+Maxima cantidad de memoria en bytes
 ```
 
 **Consulta (PromQL o LogQL):**
 ```
-Consejo: Si usaste la interfaz de Grafana para crear el panel, puedes copiar la consulta que se muestra en la caja de texto de la seccion Code.
-
-```
+sum by(area) (
+  jvm_memory_max_bytes{applicationName="julian-lopez-b-app-monitoring", area="heap"}
+)```
 
 **Tipo de visualización:** 
-- [ ] Time series
+- [X] Time series
 - [ ] Gauge
 - [ ] Bar chart
 - [ ] Stat
@@ -182,22 +174,22 @@ Consejo: Si usaste la interfaz de Grafana para crear el panel, puedes copiar la 
 
 **Otros ajustes aplicados (colores, unidades, etc.) (opcional):**
 ```
+Leyend -> Table, Rigth
 
+Unit ->a megabytes
 
 ```
 
 **Captura de pantalla:**
 
-> _[Inserta aquí la imagen del panel]_
+![alt text](image-8.png)
 
 **Análisis (2-3 frases):**
-```
-¿Qué conclusiones o patrones observas?
-
-
 
 ```
+El eje vertical muestra valores en petabytes (PB) y terabytes (TB), lo cual es un indicativo de que la métrica está representando números muy grandes.
 
+```
 ---
 
 #### Visualización Adicional 2
@@ -206,22 +198,27 @@ Consejo: Si usaste la interfaz de Grafana para crear el panel, puedes copiar la 
 ```
 ¿Qué quieres analizar o mostrar? Menciona qué métrica(s) vas a mostrar
 
+Quiero mostrar la metrica 
+http_server_requests_active_seconds_max
 
 ```
 
 **Título del panel:**
 ```
-
+Latencia promedio de las solicitudes HTTP por endpoint
 ```
 
 **Consulta (PromQL o LogQL):**
 ```
 Consejo: Si usaste la interfaz de Grafana para crear el panel, puedes copiar la consulta que se muestra en la caja de texto de la seccion Code.
 
+sum by(uri) (
+  rate(http_server_requests_seconds_sum{applicationName="julian-lopez-b-app-monitoring"}[1m])
+)
 ```
 
 **Tipo de visualización:** 
-- [ ] Time series
+- [X] Time series
 - [ ] Gauge
 - [ ] Bar chart
 - [ ] Stat
@@ -230,19 +227,20 @@ Consejo: Si usaste la interfaz de Grafana para crear el panel, puedes copiar la 
 
 **Otros ajustes aplicados (colores, unidades, etc.) (opcional):**
 ```
-
+Unit -> requests/sec
 
 ```
 
 **Captura de pantalla:**
 
-> _[Inserta aquí la imagen del panel]_
+![alt text](image-9.png)
 
 **Análisis (2-3 frases):**
 ```
 ¿Qué conclusiones o patrones observas?
 
 
+La mayoría de los endpoints presentan valores cercanos a 0, lo que indica que el número de solicitudes procesadas en el intervalo observado es bajo. No mande suficientes endpoints para que tuviera mucha carga la API
 
 ```
 
@@ -252,8 +250,7 @@ Consejo: Si usaste la interfaz de Grafana para crear el panel, puedes copiar la 
 
 **¿Qué otros datos te gustaría visualizar si tuvieras más información disponible?**
 ```
-
-
+Los usuarios conectados a la API podria ser :)
 
 ```
 
