@@ -22,7 +22,6 @@ public class UrlShortenerService {
     private final Map<String, UrlMapping> urlStorage = new ConcurrentHashMap<>();
     private final Random random = new Random();
 
-    private final Counter dummyCounter;
     //New Counter 2.2.3
     private final Counter customerCounter;
 
@@ -37,7 +36,7 @@ public class UrlShortenerService {
     
 
     private void simulateLatency() {
-        int delay = 50 + random.nextInt(450);
+        int delay = 50 + random.nextInt(450);   
         try {
             Thread.sleep(delay);
         } catch (InterruptedException e) {
