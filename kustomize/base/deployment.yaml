@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
       - name: julian-lopez-b-app-monitoring
-        image: 116981771521.dkr.ecr.us-east-1.amazonaws.com/julian-lopez-b-app:0.0.0
+        image: 116981771521.dkr.ecr.us-east-1.amazonaws.com/julian-lopez-b-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
