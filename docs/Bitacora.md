@@ -265,23 +265,27 @@ Los usuarios conectados a la API podria ser :)
 ```
 Ejemplo: url_shortener_urls_created_total
 
+customerCounter_total 
 ```
 
 **2. Tipo de métrica:**
-- [ ] Counter
+- [X] Counter
 - [ ] Gauge
 
 **3. ¿Qué comportamiento mide?**
 ```
 
-
+Mide la cantidad de intentos de registrar un código personalizado que ya existe en el sistema. 
+Cada incremento indica que un usuario trató de acortar una URL con un código que ya estaba en uso. 
+Es un indicador de conflictos en la asignación de códigos personalizados.
 
 ```
 
 **4. ¿Por qué es relevante para el sistema?**
 ```
-
-
+Es relevante porque permite identificar problemas de experiencia de usuario y posibles cuellos de botella en la generación de códigos.
+Un alto número de intentos duplicados puede señalar que los usuarios están eligiendo patrones comunes, lo que puede requerir ajustes en la lógica de generación automática de códigos o mejoras en la interfaz de usuario para guiar la selección de códigos válidos.
+Además, ayuda a monitorear la eficiencia del sistema y a prevenir errores repetitivos que podrían afectar la confiabilidad y la percepción del servicio.
 
 ```
 
@@ -292,7 +296,7 @@ Ejemplo: url_shortener_urls_created_total
 
 **1. ¿Qué tipo de panel usaste en Grafana?**
 
-- [ ] Time series  
+- [X] Time series  
 - [ ] Gauge  
 - [ ] Stat  
 - [ ] Bar chart  
@@ -301,7 +305,9 @@ Ejemplo: url_shortener_urls_created_total
 **2. ¿Qué consulta PromQL vas a utilizar?**
 ```promql
 
-
+sum by(applicationName) (
+  customerCounter_total{applicationName="julian-lopez-b-app-monitoring"}
+)
 
 ```
 
@@ -309,7 +315,7 @@ Ejemplo: url_shortener_urls_created_total
 ```
 Provee una interpretación en palabras con el propósito de la visualización. Que te interesa ver en el panel?
 
-
+El panel muestra cuántas veces los usuarios intentaron usar un código personalizado que ya estaba en uso. Cada incremento en la métrica representa un conflicto en la asignación de códigos
 
 ```
 
@@ -319,8 +325,7 @@ Provee una interpretación en palabras con el propósito de la visualización. Q
 
 **Captura de pantalla del panel en Grafana:**
 
-> _[Inserta aquí la imagen del panel mostrando la métrica visualizada]_
-
+![alt text](image-10.png)
 ---
 
 ## Etapa 3: Experimentación y Análisis del Sistema
@@ -329,15 +334,23 @@ Provee una interpretación en palabras con el propósito de la visualización. Q
 
 **1. Como describirias la anomalía?**
 
-```
-
+```java
+//ERROR 1 IDENTIFICADO
+    private void maybeFail(String endpointName) {
+        if (shouldFail()) {
+            RuntimeException ex = new RuntimeException("Unexpected failure in " + endpointName);
+            logger.error("Failure in {}: {}", endpointName, ex.getMessage(), ex);
+            throw ex;
+        }
+    }
 
 ```
 
 **2. Que paneles te ayudaron a identificarlo?**
 
 ``` 
-
+El panel de los logs
+Unexpected failure in POST /shorten\n\tat com.telemetry.urlshortener.controller.UrlController.maybeFail(UrlController.java:34)\n\tat com.telemetry.urlshortener.controller.UrlController.shortenUrl(UrlController.java:55)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)\n\tat java.base/java.lang.reflect.Method.invoke(Unknown Source)\n\tat org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:254)\n\tat org.springframework.
 
 ```
 
